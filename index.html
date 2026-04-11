@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lapse</title>
+  <meta
+    name="description"
+    content="Lapse is a simple app for recurring tasks, important dates, reminders, widgets, and private iCloud sync."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="icon" type="image/png" href="images/branding/favicon-32x32.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Lapse home">
+        <img class="brand-logo" src="images/branding/logo-transparent.png" alt="" aria-hidden="true">
+        <span>Lapse</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Primary">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="home-layout">
+      <section>
+        <p class="eyebrow">Track recurring tasks. Remember what matters.</p>
+        <h1>Lapse</h1>
+        <p class="lead">
+          A calm app for recurring tasks, birthdays, anniversaries, one-off dates, reminders,
+          widgets, and simple iCloud sync.
+        </p>
+        <p class="body-copy">
+          Lapse helps you keep up with everyday routines and important dates without pressure,
+          accounts, or clutter. It is built to stay simple and private.
+        </p>
+      </section>
+
+      <section class="slideshow-panel" aria-label="Lapse screenshots">
+        <div class="slides">
+          <figure class="slide is-active">
+            <img src="images/screenshots/1.png" alt="Lapse tasks screen showing recurring tasks at a glance.">
+          </figure>
+          <figure class="slide">
+            <img src="images/screenshots/2.png" alt="Lapse dates screen with upcoming birthdays and anniversaries.">
+          </figure>
+          <figure class="slide">
+            <img src="images/screenshots/3.png" alt="Lapse task detail screen with history and logging.">
+          </figure>
+          <figure class="slide">
+            <img src="images/screenshots/4.png" alt="Lapse date editor screen with reminder settings.">
+          </figure>
+          <figure class="slide">
+            <img src="images/screenshots/5.png" alt="Lapse widget on the iPhone Home Screen.">
+          </figure>
+        </div>
+
+        <div class="slideshow-controls" aria-label="Screenshot controls">
+          <button class="control-button" type="button" data-direction="-1" aria-label="Previous screenshot">Prev</button>
+          <div class="slide-dots" role="tablist" aria-label="Choose screenshot">
+            <button class="slide-dot is-active" type="button" role="tab" aria-selected="true" aria-label="Show screenshot 1"></button>
+            <button class="slide-dot" type="button" role="tab" aria-selected="false" aria-label="Show screenshot 2"></button>
+            <button class="slide-dot" type="button" role="tab" aria-selected="false" aria-label="Show screenshot 3"></button>
+            <button class="slide-dot" type="button" role="tab" aria-selected="false" aria-label="Show screenshot 4"></button>
+            <button class="slide-dot" type="button" role="tab" aria-selected="false" aria-label="Show screenshot 5"></button>
+          </div>
+          <button class="control-button" type="button" data-direction="1" aria-label="Next screenshot">Next</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <p>&copy; 2026 Gabriel Lindgren</p>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      const panel = document.querySelector(".slideshow-panel");
+      if (!panel) return;
+
+      const slides = Array.from(panel.querySelectorAll(".slide"));
+      const dots = Array.from(panel.querySelectorAll(".slide-dot"));
+      const buttons = Array.from(panel.querySelectorAll(".control-button"));
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let currentIndex = 0;
+      let timerId = null;
+
+      const showSlide = (index) => {
+        currentIndex = (index + slides.length) % slides.length;
+
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("is-active", slideIndex === currentIndex);
+        });
+
+        dots.forEach((dot, dotIndex) => {
+          const isActive = dotIndex === currentIndex;
+          dot.classList.toggle("is-active", isActive);
+          dot.setAttribute("aria-selected", String(isActive));
+        });
+      };
+
+      const restartTimer = () => {
+        if (prefersReducedMotion) return;
+        window.clearInterval(timerId);
+        timerId = window.setInterval(() => showSlide(currentIndex + 1), 3500);
+      };
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+          showSlide(index);
+          restartTimer();
+        });
+      });
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const direction = Number(button.dataset.direction || 1);
+          showSlide(currentIndex + direction);
+          restartTimer();
+        });
+      });
+
+      panel.addEventListener("mouseenter", () => window.clearInterval(timerId));
+      panel.addEventListener("mouseleave", restartTimer);
+
+      showSlide(0);
+      restartTimer();
+    })();
+  </script>
+</body>
+</html>
