@@ -145,6 +145,17 @@ img {
   margin: 14px 0 0;
 }
 
+.app-store-badge {
+  display: inline-block;
+  margin-top: 22px;
+}
+
+.app-store-badge img {
+  width: clamp(165px, 22vw, 195px);
+  max-width: 100%;
+  height: auto;
+}
+
 .slideshow-panel {
   display: grid;
   gap: 16px;
